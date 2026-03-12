@@ -10,6 +10,15 @@ export async function POST(req: NextRequest) {
     const validUsername = process.env.ADMIN_USERNAME || 'admin';
     const validPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
+    // Debug logging
+    console.log('Login attempt:', { 
+      providedUsername: username, 
+      validUsername,
+      providedPassword: password,
+      validPassword,
+      match: username === validUsername && password === validPassword
+    });
+
     // Validate input
     if (!username || !password) {
       return NextResponse.json(
@@ -20,6 +29,7 @@ export async function POST(req: NextRequest) {
 
     // Check credentials
     if (username !== validUsername || password !== validPassword) {
+      console.error('Credential mismatch:', { username, validUsername, password, validPassword });
       return NextResponse.json(
         { success: false, message: 'Invalid credentials' },
         { status: 401 }
