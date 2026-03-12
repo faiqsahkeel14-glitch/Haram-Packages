@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AppLayout from '@/components/layout/AppLayout';
 
 export const metadata: Metadata = {
-  title: 'Haram Packages',
-  description: 'Complete package management system',
+  title: 'Haram Packages - Accounting System',
+  description: 'Complete accounting and invoicing system',
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-slate-900">
+        <AppLayout>{children}</AppLayout>
+      </body>
     </html>
   );
 }

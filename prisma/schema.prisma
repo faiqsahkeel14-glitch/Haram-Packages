@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma Schema for Haram Packages - Full Stack Application
+// Database: PostgreSQL
 
 generator client {
   provider = "prisma-client-js"
@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// --- USER & AUTHENTICATION ---
 model User {
   id        Int     @id @default(autoincrement())
   email     String  @unique
@@ -30,23 +31,87 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-model Package {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  price       Float
-  quantity    Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+// --- CUSTOMERS & ACCOUNTS ---
+model Customer {
+  id              Int     @id @default(autoincrement())
+  name            String  @notEmpty
+  address         String?
+  phone           String?
+  type            String  @default("customer") // 'customer' or 'seller'
+  opening_balance Decimal @default(0.00) @db.Decimal(10, 2)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  transactions    Transaction[]
+  invoices        Invoice[]
+  ledger          CustomerLedger?
 }
 
-model Order {
+model Account {
   id        Int     @id @default(autoincrement())
-  userId    Int
-  packageId Int
-  quantity  Int
-  total     Float
-  status    String  @default("pending")
+  name      String  @unique
+  balance   Decimal @default(0.00) @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  transactions Transaction[]
+}
+
+model CustomerLedger {
+  id          Int     @id @default(autoincrement())
+  customerId  Int     @unique
+  balance     Decimal @default(0.00) @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+// --- TRANSACTIONS ---
+model Transaction {
+  id                Int     @id @default(autoincrement())
+  customerId        Int
+  accountId         Int
+  direction         String  // 'inward' or 'outward'
+  amount            Decimal @db.Decimal(10, 2)
+  description       String?
+  transaction_date  DateTime
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  customer          Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  account           Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([accountId])
+}
+
+// --- INVOICES ---
+model Invoice {
+  id              Int     @id @default(autoincrement())
+  customerId      Int
+  description     String?
+  quantity        Int     @default(1)
+  unit_price      Decimal @default(0.00) @db.Decimal(10, 2)
+  total           Decimal @db.Decimal(10, 2)
+  invoice_date    DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  customer        Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+// --- BANK (Legacy model - kept for reference) ---
+model Bank {
+  id        Int     @id @default(autoincrement())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

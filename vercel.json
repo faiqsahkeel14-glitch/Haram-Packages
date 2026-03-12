@@ -1,6 +1,27 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && npx prisma generate && npx prisma db push",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "env": {
+    "DATABASE_URL": {
+      "description": "PostgreSQL database connection string"
+    },
+    "ADMIN_USERNAME": {
+      "description": "Admin login username"
+    },
+    "ADMIN_PASSWORD": {
+      "description": "Admin login password"
+    },
+    "JWT_SECRET": {
+      "description": "JWT secret key for signing tokens (minimum 32 characters)"
+    },
+    "JWT_EXPIRES_IN": {
+      "description": "JWT expiration time (e.g., 7d, 24h)"
+    },
+    "NEXT_PUBLIC_APP_URL": {
+      "description": "Your application URL"
+    }
+  }
 }
+

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateToken } from '@/lib/jwt';
+import { signToken } from '@/lib/jwt';
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
     const { username, password } = body;
 
     // Get credentials from environment variables
-    const validUsername = process.env.LOGIN_USERNAME || 'admin';
-    const validPassword = process.env.LOGIN_PASSWORD || 'admin123';
+    const validUsername = process.env.ADMIN_USERNAME || 'admin';
+    const validPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
     // Validate input
     if (!username || !password) {
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate JWT token
-    const token = await generateToken(1, username);
+    const token = signToken({ userId: 1, username });
 
     return NextResponse.json(
       {

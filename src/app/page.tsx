@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      router.push('/dashboard');
+      router.push('/daybook');
     } else {
       router.push('/login');
     }
@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <p>Redirecting...</p>
+      <p className="text-white">Redirecting...</p>
     </main>
   );
 }

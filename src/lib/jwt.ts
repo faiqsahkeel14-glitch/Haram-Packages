@@ -1,16 +1,31 @@
 import jwt from 'jsonwebtoken';
-import { jwtVerify } from 'jose';
 
-const secret = process.env.JWT_SECRET || 'your_secret_key_here_min_32_chars';
-
-export async function generateToken(userId: number, username: string): Promise<string> {
-  const token = jwt.sign({ userId, username }, secret, { expiresIn: '7d' });
-  return token;
+interface JWTPayload {
+  userId: number;
+  username: string;
+  iat?: number;
+  exp?: number;
 }
 
-export async function verifyToken(token: string): Promise<{ userId: number; username: string } | null> {
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-change-in-production';
+const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '7d';
+
+export function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+}
+
+export function verifyToken(token: string): JWTPayload | null {
   try {
-    const decoded = jwt.verify(token, secret) as { userId: number; username: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return decoded;
+  } catch (error) {
+    return null;
+  }
+}
+
+export function decodeToken(token: string): JWTPayload | null {
+  try {
+    const decoded = jwt.decode(token) as JWTPayload;
     return decoded;
   } catch (error) {
     return null;
@@ -25,4 +40,9 @@ export function getTokenFromRequest(req: Request): string | null {
   if (parts.length !== 2 || parts[0] !== 'Bearer') return null;
   
   return parts[1];
+}
+
+// Backward compatibility
+export async function generateToken(userId: number, username: string): Promise<string> {
+  return signToken({ userId, username });
 }
