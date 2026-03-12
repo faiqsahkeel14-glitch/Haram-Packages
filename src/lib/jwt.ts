@@ -11,10 +11,9 @@ const JWT_SECRET: string = process.env.JWT_SECRET || 'fallback-secret-key-change
 const JWT_EXPIRES: string = process.env.JWT_EXPIRES_IN || '7d';
 
 export function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-  const options: SignOptions = {
+  return jwt.sign(payload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES,
-  };
-  return jwt.sign(payload, JWT_SECRET, options);
+  } as any);
 }
 
 export function verifyToken(token: string): JWTPayload | null {
