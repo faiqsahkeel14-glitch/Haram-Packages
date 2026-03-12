@@ -15,7 +15,7 @@ export async function apiCall<T>(
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
   const url = `${apiUrl}${endpoint}`;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
   };
