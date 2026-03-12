@@ -2,15 +2,6 @@
   "buildCommand": "npx prisma generate && npm run build && npx prisma db push",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "env": {
-    "DATABASE_URL": "PostgreSQL database connection string",
-    "ADMIN_USERNAME": "Admin login username",
-    "ADMIN_PASSWORD": "Admin login password",
-    "JWT_SECRET": "JWT secret key (min 32 characters)",
-    "JWT_EXPIRES_IN": "JWT expiration (e.g., 7d)",
-    "NEXT_PUBLIC_APP_URL": "Application URL",
-    "NODE_ENV": "Environment (production)"
-  }
+  "framework": "nextjs"
 }
 
