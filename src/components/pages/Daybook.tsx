@@ -383,7 +383,7 @@ export default function Daybook() {
       <div className="flex justify-center">
         <div className="bg-slate-900/50 border border-slate-700 rounded-full px-8 py-4">
           <div className="flex items-baseline gap-4">
-            <span className="text-xl font-bold text-slate-300">Day's Net Flow:</span>
+            <span className="text-xl font-bold text-slate-300">Day&apos;s Net Flow:</span>
             <span
               className={`text-3xl font-bold font-mono ${
                 totalInward - totalOutward >= 0 ? 'text-green-400' : 'text-red-400'
