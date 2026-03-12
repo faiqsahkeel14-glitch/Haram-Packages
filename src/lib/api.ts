@@ -15,16 +15,16 @@ export async function apiCall<T>(
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
   const url = `${apiUrl}${endpoint}`;
 
-  const headers: Record<string, string> = {
+  const headers: HeadersInit = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
-  };
+  } as any;
 
   // Add authorization header if token exists
   if (requiresAuth) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
   }
 
