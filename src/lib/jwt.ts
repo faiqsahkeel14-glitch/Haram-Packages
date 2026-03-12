@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 
+// JWT Payload Interface
 interface JWTPayload {
   userId: number;
   username: string;
