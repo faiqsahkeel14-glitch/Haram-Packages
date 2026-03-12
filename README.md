@@ -61,27 +61,22 @@ npm run dev
 
 ## 🗄️ Database Setup - Choose One Option
 
-### ⭐ Option 1: Vercel Postgres (RECOMMENDED - Easiest)
+### ⭐ Option 1: Neon (RECOMMENDED - Easiest)
 
-**Perfect for**: Production deployment on Vercel
+**Perfect for**: Vercel deployment (available in Vercel Storage)  
+**Free tier**: 3GB PostgreSQL, perfect for development and small production apps
 
-#### Step 1: Create Vercel Account
-1. Go to [vercel.com](https://vercel.com)
-2. Sign up with GitHub
-3. Create a new project
+#### Step 1: Create Database via Vercel
+1. Go to your Vercel project → **"Storage"** tab
+2. Click **"Create"** → Select **"Neon"** (from Marketplace)
+3. Click **"Continue"**
+4. Authorize Neon
+5. Create database → **Copy connection string**
 
-#### Step 2: Create Free PostgreSQL Database
-1. Click **"Storage"** in your Vercel project
-2. Click **"Create"** → Select **"Postgres"**
-3. Choose your region
-4. Name it `haram-packages-db`
-5. Click **"Create"**
-6. **Copy the `POSTGRES_URL_NONPOOL` connection string**
-
-#### Step 3: Use in Local Development
+#### Step 2: Use Connection String
 Add to `.env.local`:
 ```env
-DATABASE_URL="paste_POSTGRES_URL_NONPOOL_here"
+DATABASE_URL="postgresql://neon_user:password@ep-xxxx.neon.tech/neon_db"
 ```
 
 Then:
@@ -91,18 +86,23 @@ npx prisma db push
 npm run dev
 ```
 
+#### Step 3: Deploy to Vercel
+Vercel automatically sets up the connection during deployment. Just add the `DATABASE_URL` secret in Vercel dashboard.
+
 ---
 
 ### Option 2: Supabase (Free - 2GB)
 
-[supabase.com](https://supabase.com) - Free PostgreSQL with great UI
+[supabase.com](https://supabase.com) - Free PostgreSQL with great UI  
+**Also available via Vercel Storage → Marketplace**
 
-1. Click **"New Project"**
-2. Enter project name and password
-3. Choose region and create
-4. Go to **Settings** → **Database**
-5. Copy the **Psql connection string**
-6. Replace `[YOUR-PASSWORD]` with your password
+1. Go to [supabase.com](https://supabase.com) or Vercel Storage → Marketplace → Supabase
+2. Click **"New Project"**
+3. Enter project name and password
+4. Choose region
+5. Go to **Settings** → **Database**
+6. Copy **Psql connection string**
+7. Replace `[YOUR-PASSWORD]` with your database password
 
 Add to `.env.local`:
 ```env
@@ -111,27 +111,26 @@ DATABASE_URL="postgresql://postgres:[password]@aws-0-[region].pooler.supabase.co
 
 ---
 
-### Option 3: Neon (Free - 3GB)
+### Option 3: Prisma Postgres (Free - Limited)
 
-[neon.tech](https://neon.tech) - Serverless PostgreSQL
+**Available via Vercel Storage → Marketplace**
 
-1. Sign up and create project
-2. Go to **Connection Details**
-3. Copy the connection string
+Instant Serverless Postgres from Prisma
 
-Add to `.env.local`:
-```env
-DATABASE_URL="postgresql://[user]:[password]@ep-[id].neon.tech/[db]"
-```
+1. Go to Vercel Storage → Create → Select "Prisma Postgres"
+2. Follow setup
+3. Copy connection string
 
 ---
 
-### Option 4: Railway (Free Trial)
+### Option 4: Railway (Free Trial - 5 credits)
 
-[railway.app](https://railway.app) - Simple and quick
+[railway.app](https://railway.app) - Simple PostgreSQL  
+**Free credits run out, then paid**
 
-1. Click **"Start Project"** → **"PostgreSQL"**
-2. Copy the **Postgres Connection URL**
+1. Go to [railway.app](https://railway.app)
+2. Click **"New Project"** → **"PostgreSQL"**
+3. Copy the **Postgres Connection URL**
 
 Add to `.env.local`:
 ```env
@@ -140,9 +139,9 @@ DATABASE_URL="postgresql://postgres:[password]@containers-us-west-xxx.railway.ap
 
 ---
 
-### Option 5: Local PostgreSQL
+### Option 5: Local PostgreSQL (Development Only)
 
-**For development without internet:**
+**For offline development without internet:**
 
 1. **[Install PostgreSQL](https://www.postgresql.org/download/)**
 2. Create database:
@@ -155,6 +154,18 @@ DATABASE_URL="postgresql://postgres:[password]@containers-us-west-xxx.railway.ap
    ```env
    DATABASE_URL="postgresql://postgres:password@localhost:5432/haram_packages"
    ```
+
+---
+
+**💡 Comparison Table:**
+
+| Option | Price | Tier | Connected to Vercel |
+|--------|-------|------|---------------------|
+| **Neon** | FREE | 3GB | ✅ Yes (Marketplace) |
+| **Supabase** | FREE | 2GB | ✅ Yes (Marketplace) |
+| **Prisma Postgres** | Paid | Serverless | ✅ Yes (Marketplace) |
+| **Railway** | FREE TRIAL | Credits | ❌ Manual |
+| **Local** | FREE | Limited | ❌ Local only |
 
 ---
 
@@ -203,30 +214,50 @@ git push origin main
 3. Select your GitHub repository
 4. Click **"Import"**
 
-### Step 3: Create Database
-1. Click **"Storage"** tab
-2. Create **"Postgres"** database
-3. **Copy `POSTGRES_URL_NONPOOL`**
+### Step 3: Choose a Database
+Choose ONE option:
+
+#### Option A: Add Neon Database (Recommended)
+1. In Vercel project → Click **"Storage"** tab
+2. Click **"Create"** → Select **"Neon"** (from Marketplace)
+3. Authorize and create database
+4. **Copy the connection string**
+5. ✅ Vercel automatically adds `DATABASE_URL` env var
+
+#### Option B: Add Supabase Database
+1. In Vercel project → Click **"Storage"** tab
+2. Click **"Create"** → Select **"Supabase"** (from Marketplace)
+3. Authorize and setup
+4. **Copy the connection string**
+5. ✅ Vercel automatically adds `DATABASE_URL` env var
+
+#### Option C: Manual Database (External)
+If using local/external database:
+1. Go to Vercel **"Settings"** → **"Environment Variables"**
+2. Add `DATABASE_URL` manually
 
 ### Step 4: Add Environment Variables
-Click **"Settings"** → **"Environment Variables"**
+In Vercel **"Settings"** → **"Environment Variables"**
 
 Add these:
 
 | Name | Value |
 |------|-------|
-| `DATABASE_URL` | Paste `POSTGRES_URL_NONPOOL` from Step 3 |
+| `DATABASE_URL` | (Already set by Neon/Supabase if selected above) |
 | `ADMIN_USERNAME` | `admin` |
 | `ADMIN_PASSWORD` | Your secure password |
 | `JWT_SECRET` | Generate random 32+ chars |
 | `JWT_EXPIRES_IN` | `7d` |
-| `NEXT_PUBLIC_APP_URL` | Your Vercel domain |
+| `NEXT_PUBLIC_APP_URL` | Your Vercel domain (e.g., `https://haram-packages.vercel.app`) |
 | `NODE_ENV` | `production` |
 
 ### Step 5: Deploy
 Click **"Deploy"** button
 
 ✅ **Done!** Your app is live in 3-5 minutes
+
+📍 **Your App URL**: https://haram-packages-[random].vercel.app  
+🔐 **Login**: Use your ADMIN_USERNAME and ADMIN_PASSWORD
 
 ---
 
