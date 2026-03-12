@@ -34,7 +34,7 @@ model Session {
 // --- CUSTOMERS & ACCOUNTS ---
 model Customer {
   id              Int     @id @default(autoincrement())
-  name            String  @notEmpty
+  name            String
   address         String?
   phone           String?
   type            String  @default("customer") // 'customer' or 'seller'
